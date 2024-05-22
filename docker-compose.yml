@@ -1,0 +1,36 @@
+version: '3'
+
+name: radio
+
+services:
+  icecast2:
+    image: pltnk/icecast2
+    container_name: icecast2
+    restart: always
+    environment:
+      - ICECAST_SOURCE_PASSWORD=pwd
+    ports:
+      - 10333:8000
+    volumes:
+      - /Users/nb-078-11b/projects/radio/icecast.xml:/etc/icecast2/icecast.xml
+    networks:
+      radio-network:
+        aliases:
+          - icecast2.my
+
+  liquidsoap:
+    image: pltnk/liquidsoap
+    container_name: liquidsoap
+    restart: always
+    volumes:
+      - /Users/nb-078-11b/projects/radio/script.liq:/etc/liquidsoap/script.liq
+      - /Users/nb-078-11b/projects/radio/music:/music
+      - /Users/nb-078-11b/projects/radio/ls-logs:/var/log/liquidsoap
+    networks:
+      radio-network:
+        aliases:
+          - liquidsoap.my
+  
+networks:
+  radio-network:
+
